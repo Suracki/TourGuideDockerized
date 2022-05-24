@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+    tourguide:
+        build:
+            context: ./TourGuide
+            dockerfile: Dockerfile
+        container_name: tourguide
+        depends_on:
+            - rewardsservice
+        ports:
+            - "8080:8080"
+        expose:
+            - "8080"
+        networks:
+            - system
+    gpsservice:
+        build:
+            context: ./GpsService
+            dockerfile: Dockerfile
+        container_name: gpsservice
+        ports:
+            - "8081:8081"
+        networks:
+            - system
+    userservice:
+        build:
+            context: ./UserService
+            dockerfile: Dockerfile
+        container_name: userservice
+        depends_on:
+            - gpsservice
+        ports:
+            - "8082:8082"
+        networks:
+            - system
+    rewardsservice:
+        build:
+            context: ./RewardsService
+            dockerfile: Dockerfile
+        container_name: rewardsservice
+        depends_on:
+            - userservice
+        ports:
+            - "8083:8083"
+        networks:
+            - system
+        
+networks:
+    system:
